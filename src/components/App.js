@@ -1,24 +1,27 @@
-import React, { useRef } from "react"
+import React from "react";
+import "../styles/App.css";
+import Component from "./Component";
+import ErrorBoundary from "./ErrorBoundary";
+const App = () => {
+  let throwErrorFunction;
+  let errorGenerator = () => {
+    throwErrorFunction(true);
+  };
 
-const AddTodo = ({ dispatch }) => {
-    const inpRef = useRef();
-    const handleSubmit = (e)=> {
-        e.preventDefault();
-        let title = inpRef.current.value;
-        if(!title) return;
-        let id = Date.now();
-        console.log(title,id);
-        dispatch({type : 'addTodo', obj: {title,id}})
-        inpRef.current.value = '';
-    }
+  let changeFunc = (updateError) => {
+    throwErrorFunction = updateError;
+  };
+  return (
+    <div id="main">
+      <h2>React Error Boundaries</h2>
+      <ErrorBoundary>
+        <Component change={changeFunc} />
+      </ErrorBoundary>
+      <button id="gen" onClick={errorGenerator}>
+        Generate Error
+      </button>
+    </div>
+  );
+};
 
-    return (
-        <form id="todo-form" onSubmit={handleSubmit}>
-            <label htmlFor="todo-input">Title</label>
-            <input type="text" id="todo-input" ref={inpRef}/>
-            <button type="submit">Add To-Do</button>
-        </form>
-    )
-}
-
-export { AddTodo }
+export default App;
